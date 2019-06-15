@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:yamly/models/foodModel.dart';
 import 'dart:core';
 
-class ProductsPage extends StatefulWidget {
-  ProductsPage({Key key}) : super(key: key);
+class CardsPage extends StatefulWidget {
+  CardsPage({Key key}) : super(key: key);
 
   @override
-  _ProductsPageState createState() => _ProductsPageState();
+  _CardsPageState createState() => _CardsPageState();
 }
 
-class _ProductsPageState extends State<ProductsPage>
+class _CardsPageState extends State<CardsPage>
     with SingleTickerProviderStateMixin {
   List<FoodModel> _foods;
   List<Widget> _cards;
@@ -28,13 +28,13 @@ class _ProductsPageState extends State<ProductsPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Stack(alignment: Alignment.center, children: _cards),
-          ),
-        ));
+    return SafeArea(
+      child:
+        Scaffold(
+            appBar: AppBar(),
+            body: Stack(alignment: Alignment.center, children: _cards)
+        )
+    );
   }
 
   List<Widget> _getCards() {
@@ -84,7 +84,6 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
   void initState() {
     super.initState();
     _controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    //initAnimation();
   }
 
   void initAnimation(bool isLeft) {
@@ -165,14 +164,20 @@ class MoveTransition extends StatelessWidget {
 
   final Widget child;
   final Animation<double> animation;
+  final double offset = 20.0;
 
   Widget build(BuildContext context) => 
-      Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Transform.translate(
-          offset: Offset(
-            - (animation != null ? animation.value : 0.0), 
-            - (animation != null ? animation.value.abs() / 6 : 0.0)),
-          child: child
-      ));
+    child;
+    // Transform.translate(
+    //   offset: Offset((animation != null ? animation.value : 0), (animation != null ? animation.value.abs() / 3 : 0)),
+    //   child: child,
+    // );
+
+      // Positioned(
+      //   right: offset + (animation != null ? animation.value : 0),
+      //   left: offset - (animation != null ? animation.value : 0),
+      //   top: offset - (animation != null ? animation.value.abs() / 3 : 0),
+      //   bottom: offset + (animation != null ? animation.value.abs() / 3 : 0),
+      //   child: child,
+      // );
 }

@@ -62,19 +62,23 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                 return tabList[index].widget;
               })),
       bottomNavigationBar: Container(
-          color: Colors.black87,
-          child: TabBar(
-              controller: _tabController,
-              indicatorColor: Colors.black,
-              labelColor: Colors.blueAccent,
-              unselectedLabelColor: Colors.grey,
-              indicatorWeight: 1,
-              indicator: UnderlineTabIndicator(
-                  borderSide: BorderSide(color: Colors.black, width: 1.0),
-                  insets: EdgeInsets.fromLTRB(70.0, 0.0, 70.0, 46)),
-              tabs: tabList.map((item) {
-                return Tab(icon: item.icon);
-              }).toList())),
+        color: Colors.black87,
+        child: SafeArea(
+          child: Container(
+            child: TabBar(
+                controller: _tabController,
+                indicatorColor: Colors.black,
+                labelColor: Colors.blueAccent,
+                unselectedLabelColor: Colors.grey,
+                indicatorWeight: 1,
+                indicator: UnderlineTabIndicator(
+                    borderSide: BorderSide(color: Colors.black, width: 1.0),
+                    insets: EdgeInsets.fromLTRB(70.0, 0.0, 70.0, 46)),
+                tabs: tabList.map((item) {
+                  return Tab(icon: item.icon);
+                }).toList()))
+        ),
+      ),
     );
   }
 }
