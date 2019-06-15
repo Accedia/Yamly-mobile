@@ -13,19 +13,45 @@ class AuthService {
   PublishSubject loading = PublishSubject();
 
   AuthService() {
+    user = Observable(_auth.onAuthStateChanged);
 
+    profile = user.switchMap((FirebaseUser u) {
+      if (u != null) {
+        return _db.collection('users').document(u.uid).snapshots().map((snap) => snap.data);
+      } else {
+        return Observable.just({ });
+      }
+    });
   }
 
   Future<FirebaseUser> googleSignIn() async {
+    loading.add(true);
 
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken
+    );
+
+    loading.add(false);
+    return await _auth.signInWithCredential(credential);
   }
 
   void updateUserData(FirebaseUser user) async {
+    final DocumentReference ref = _db.collection('users').document(user.uid);
 
+    return ref.setData({
+      'uid': user.uid,
+      'email': user.email,
+      'photoURL': user.photoUrl,
+      'displayName': user.displayName, 
+      'lastSeen': DateTime.now()
+    }, merge: true);
   }
 
   void signOut() {
-    
+    _auth.signOut();
   }
 }
 

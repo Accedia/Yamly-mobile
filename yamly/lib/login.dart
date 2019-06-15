@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:yamly/main.dart';
+import 'package:yamly/auth.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -13,7 +14,10 @@ class Login extends StatelessWidget {
           color: Colors.white,
           textColor: Colors.black,
           onPressed: () { 
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(title: 'Flutter Demo Home Page')));
+            authService.googleSignIn().then((user) {
+              authService.updateUserData(user);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(title: 'Flutter Demo Home Page')));
+            });
           },
         ),
       )
