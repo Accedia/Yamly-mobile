@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:yamly/match_card.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -11,18 +10,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-  List<Widget> cardList;
+  List<Widget> _cards;
 
   @override
   void initState() {
     super.initState();
-    cardList = _getMatchCard();
-  }
-
-  void _removeCard(index) {
-    setState(() {
-      cardList.removeAt(index);
-    });
+    _cards = _getCards();
   }
 
   @override
@@ -32,24 +25,20 @@ class _MyHomePageState extends State<MyHomePage>
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Stack(alignment: Alignment.center, children: cardList),
+            child: Stack(alignment: Alignment.center, children: _cards),
           ),
         ));
   }
 
-  List<Widget> _getMatchCard() {
-    var cards = new List<MatchCard>();
-    cards.add(MatchCard(255, 0, 0, 10));
-    cards.add(MatchCard(0, 255, 0, 20));
-    cards.add(MatchCard(0, 0, 255, 30));
+  List<Widget> _getCards() {
+    var cards = List<Widget>();
 
-    var cardList = new List<Widget>();
-    for (int x = 0; x < 3; x++) {
-      cardList.add(
+    for (int x = 0; x < 30; x++) {
+      cards.add(
         Align(
           alignment: Alignment.center,
-          child: new Dismissible(
-            key: new Key(new Random().toString()),
+          child: Dismissible(
+            key: Key(Random().toString()),
             crossAxisEndOffset: -0.1,
             onResize: () {},
             onDismissed: (direction) {
@@ -57,8 +46,8 @@ class _MyHomePageState extends State<MyHomePage>
             },
             child: Card(
               elevation: 12,
-              color: Color.fromARGB(255, cards[x].redColor, cards[x].greenColor,
-                  cards[x].blueColor),
+              color: Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0)
+                  .withOpacity(1.0),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               child: Container(
@@ -75,10 +64,9 @@ class _MyHomePageState extends State<MyHomePage>
                           iconSize: 50,
                           onPressed: () {}),
                       IconButton(
-                        icon: Icon(Icons.arrow_right, color: Colors.white),
-                        iconSize: 50,
-                        onPressed: () {}
-                      )
+                          icon: Icon(Icons.arrow_right, color: Colors.white),
+                          iconSize: 50,
+                          onPressed: () {})
                     ]),
               ),
             ),
@@ -87,6 +75,12 @@ class _MyHomePageState extends State<MyHomePage>
       );
     }
 
-    return cardList;
+    return cards;
+  }
+
+  void _removeCard(index) {
+    setState(() {
+      _cards.removeAt(index);
+    });
   }
 }
