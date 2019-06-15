@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:yamly/main.dart';
+import 'package:yamly/cards.dart';
 import 'package:yamly/auth.dart';
 
 class Login extends StatelessWidget {
@@ -16,7 +16,7 @@ class Login extends StatelessWidget {
           onPressed: () { 
             authService.googleSignIn().then((user) {
               authService.updateUserData(user);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(title: 'Flutter Demo Home Page')));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
             });
           },
         ),
