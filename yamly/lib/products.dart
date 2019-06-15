@@ -30,11 +30,11 @@ class _ProductsPageState extends State<ProductsPage>
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Stack(alignment: Alignment.center, children: _cards),
-          ),
-        ));
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Stack(alignment: Alignment.center, children: _cards),
+      ),
+    ));
   }
 
   List<Widget> _getCards() {
@@ -120,7 +120,7 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
               widget.callback(widget.x);
             },
             child: Card(
-              elevation: 12,
+              elevation: 7,
               color: widget.color,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),

@@ -12,8 +12,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'GothamRounded'
       ),
-      home: authService.user != null ? HomePage() : Login()
+      home: authService.user != null ? HomePage() : LoginPage()
     );
   }
 }

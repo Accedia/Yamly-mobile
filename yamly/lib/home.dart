@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:yamly/colors.dart';
 import 'package:yamly/products.dart';
+import 'package:yamly/profile.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -29,7 +31,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
 
   initTabData() {
     tabList = [
-      NavTab(1, Icon(Icons.person), ProductsPage()),
+      NavTab(1, Icon(Icons.person), ProfilePage()),
       NavTab(2, Icon(Icons.view_carousel), ProductsPage()),
       NavTab(3, Icon(Icons.fastfood), ProductsPage())
     ];
@@ -68,7 +70,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
             child: TabBar(
                 controller: _tabController,
                 indicatorColor: Colors.black,
-                labelColor: Colors.blueAccent,
+                labelColor: Style.PrimaryColor,
                 unselectedLabelColor: Colors.grey,
                 indicatorWeight: 1,
                 indicator: UnderlineTabIndicator(
@@ -78,7 +80,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                   return Tab(icon: item.icon);
                 }).toList()))
         ),
-      ),
+      )
     );
   }
 }
