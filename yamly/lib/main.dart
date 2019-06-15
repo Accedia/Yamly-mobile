@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yamly/auth.dart';
+import 'package:yamly/cards.dart';
 import 'package:yamly/login.dart';
 
 void main() => runApp(MyApp());
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Login()
+      home: authService.user != null ? MyHomePage() : Login()
     );
   }
 }
