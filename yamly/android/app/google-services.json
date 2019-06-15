@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "920054778426",
+    "firebase_url": "https://yamly-eee3c.firebaseio.com",
+    "project_id": "yamly-eee3c",
+    "storage_bucket": "yamly-eee3c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920054778426:android:8d7cd43344d07bea",
+        "android_client_info": {
+          "package_name": "com.accedia.yamly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "920054778426-m41tin6h4vcp4e91ju5uhskrrca366r7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.accedia.yamly",
+            "certificate_hash": "6fc21494deab0dfda8597c2a271868ea49c40678"
+          }
+        },
+        {
+          "client_id": "920054778426-das1ln7sem91e7hspc7lpd6hhaua79bb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-yR9U6krKJweIFuMXzMSPCM3D6ppUmHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "920054778426-das1ln7sem91e7hspc7lpd6hhaua79bb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

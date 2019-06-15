@@ -1,26 +1,20 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:yamly/login.dart';
+import 'package:yamly/match_card.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Login(),
     );
   }
 }
@@ -28,84 +22,187 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
+  List<Widget> cardList;
+  AnimationController _buttonController;
+  var matrix = Matrix4.identity();
 
-  void _incrementCounter() {
+  Animation<double> rotate;
+  Animation<double> right;
+  Animation<double> bottom;
+
+  double skew = 0;
+  var rotation = 0;
+  var tag = "tag";
+
+  @override
+  void initState() {
+    super.initState();
+    cardList = _getMatchCard();
+    cardList.add(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          IconButton(
+              icon: Icon(
+                Icons.arrow_left,
+                color: Colors.white,
+              ),
+              iconSize: 50,
+              onPressed: () {
+                _swipeAnimation();
+              }),
+          IconButton(
+            icon: Icon(Icons.arrow_right, color: Colors.white),
+            iconSize: 50,
+            onPressed: () {
+              _swipeAnimation();
+            },
+          )
+        ]));
+
+    _buttonController = new AnimationController(
+        duration: new Duration(milliseconds: 1000), vsync: this);
+
+    rotate = new Tween<double>(
+      begin: -0.0,
+      end: -40.0,
+    ).animate(
+      new CurvedAnimation(
+        parent: _buttonController,
+        curve: Curves.ease,
+      ),
+    );
+    rotate.addListener(() {});
+
+    right = new Tween<double>(
+      begin: 0.0,
+      end: 400.0,
+    ).animate(
+      new CurvedAnimation(
+        parent: _buttonController,
+        curve: Curves.ease,
+      ),
+    );
+
+    bottom = new Tween<double>(
+      begin: 15.0,
+      end: 100.0,
+    ).animate(
+      new CurvedAnimation(
+        parent: _buttonController,
+        curve: Curves.ease,
+      ),
+    );
+  }
+
+  Future<void> _swipeAnimation() async {
+    try {
+      await _buttonController.forward();
+    } on TickerCanceled {}
+  }
+
+  void _swap(DragUpdateDetails details) {
+    matrix.translate(-details.globalPosition.dx, -details.globalPosition.dy);
+    matrix.rotateZ(0.174533);
+    matrix.translate(details.globalPosition.dx, details.globalPosition.dy);
+    setState(() {});
+  }
+
+  void _removeCard(index) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      cardList.removeAt(index);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Stack(alignment: Alignment.center, children: cardList),
+          ),
+        ));
   }
+
+  List<Widget> _getMatchCard() {
+    var cards = new List<MatchCard>();
+    cards.add(MatchCard(255, 0, 0, 10));
+    cards.add(MatchCard(0, 255, 0, 20));
+    cards.add(MatchCard(0, 0, 255, 30));
+
+    var cardList = new List<Widget>();
+    for (int x = 0; x < 3; x++) {
+      cardList.add(
+        Align(
+          alignment: Alignment.center,
+          child:
+              // Draggable(
+              //   onDragEnd: (drag) {
+              //     _removeCard(x);
+              //   },
+              //   childWhenDragging: Container(),
+              //   feedback: Card(
+              //     elevation: 12,
+              //     color: Color.fromARGB(255, cards[x].redColor, cards[x].greenColor,
+              //         cards[x].blueColor),
+              //     shape:
+              //         RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              //     child: Container(width: double.infinity, height: double.infinity),
+              //   ),
+              //   child:
+              new Dismissible(
+                  key: new Key(new Random().toString()),
+                  crossAxisEndOffset: -0.1,
+                  onResize: () {},
+                  onDismissed: (direction) {
+                    _removeCard(x);
+                  },
+                  child: new Transform(
+                    // alignment: Alignment.bottomLeft,
+                    transform: matrix,
+                    child: new RotationTransition(
+                      turns: new AlwaysStoppedAnimation(0),
+                      // child: new Hero(
+                      // tag: tag,
+                      child: new GestureDetector(
+                        onHorizontalDragUpdate: (details) {
+                          matrix.translate(-details.globalPosition.dx,
+                              -details.globalPosition.dy);
+                          matrix.rotateZ(0.174533);
+                          matrix.translate(details.globalPosition.dx,
+                              details.globalPosition.dy);
+                          setState(() {});
+                        },
+                        child: Card(
+                          elevation: 12,
+                          color: Color.fromARGB(255, cards[x].redColor,
+                              cards[x].greenColor, cards[x].blueColor),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Container(
+                              width: double.infinity, height: double.infinity),
+                        ),
+                      ),
+                      // ),
+                    ),
+                  )),
+        ),
+      );
+    }
+
+    return cardList;
+  }
+
+  void dismissImg(img) {}
 }
