@@ -1,15 +1,27 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+class ProductPage extends StatefulWidget {
+  ProductPage({Key key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _ProductPageState createState() => _ProductPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
+class _ProductPageState extends State<ProductPage>
     with SingleTickerProviderStateMixin {
+
+  static final controller = PageController(
+    initialPage: 1
+  );
+
+  final pageView = PageView(
+    controller: controller,
+    children: <Widget>[
+
+    ],
+  );
+
   List<Widget> _cards;
 
   @override
@@ -21,7 +33,6 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
