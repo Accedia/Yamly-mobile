@@ -58,7 +58,7 @@ class LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.symmetric(vertical: 15),
           minWidth: 200,
           textColor: Colors.white,
-          child: Text("Login with Google"),
+          child: Text("Sign In"),
           onPressed: () {
             authService.googleSignIn().then((user) {
               Navigator.pushReplacement(context,
