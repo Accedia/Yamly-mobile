@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yamly/services/auth.dart';
 import 'package:yamly/camera.dart';
-import 'package:yamly/values/colors.dart';
 import 'package:yamly/login.dart';
 import 'package:yamly/models/data.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
@@ -11,18 +10,25 @@ import 'package:permission_handler/permission_handler.dart';
 import 'ml.dart';
 
 class ProfilePage extends StatelessWidget {
-  Future<String> getLabels(String path) async {
+  Future<bool> isItAHotDog(String path) async {
     final FirebaseVisionImage visionImage =
         FirebaseVisionImage.fromFilePath(path);
 
     var labels = await mlKit.getImageLabels(visionImage);
-    var text = "";
+    bool isIt = false;
 
     for (ImageLabel label in labels) {
-      text += "${label.text} ";
+      var lowerCased = label.text.toLowerCase();
+
+      if (lowerCased == "hot dog bun" ||
+          lowerCased == "hog dog" ||
+          lowerCased == "hotdog") {
+        isIt = true;
+        break;
+      }
     }
 
-    return Future(() => text);
+    return Future(() => isIt);
   }
 
   @override
@@ -86,11 +92,12 @@ class ProfilePage extends StatelessWidget {
         MaterialPageRoute(
             builder: (context) => TakePictureScreen(camera: firstCamera)));
 
-    var text = await getLabels(result);
+    var isIt = await isItAHotDog(result);
 
     Scaffold.of(context)
       ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(text)));
+      ..showSnackBar(
+          SnackBar(content: Text(isIt ? "HOTDOG!" : "NOT HOTDOG :(")));
   }
 
   Future<bool> _checkAndRequestCameraPermissions() async {
