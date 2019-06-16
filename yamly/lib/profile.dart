@@ -55,26 +55,14 @@ class ProfilePage extends StatelessWidget {
                 child: Text("Log Out"),
                 onPressed: () {
                   authService.signOut().then((value) {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LoginPage(isLogin: true)));
                   });
                 },
               ),
             ),
-            // FutureBuilder(
-            //     future: getLabels(),
-            //     initialData: "Loading text..",
-            //     builder: (BuildContext context, AsyncSnapshot<String> text) {
-            //       return new SingleChildScrollView(
-            //           padding: new EdgeInsets.all(8.0),
-            //           child: new Text(
-            //             text.data,
-            //             style: new TextStyle(
-            //               fontWeight: FontWeight.bold,
-            //               fontSize: 19.0,
-            //             ),
-            //           ));
-            //     })
             SizedBox(height: 20),
             RaisedButton(
               onPressed: () async {

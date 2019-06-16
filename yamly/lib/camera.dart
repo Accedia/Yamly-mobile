@@ -41,43 +41,42 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Transform.scale(
-                scale: 1 / _controller.value.aspectRatio,
-                child: new Center(
-                  child: new AspectRatio(
-                      aspectRatio: _controller.value.aspectRatio,
-                      child: new CameraPreview(_controller)),
-                ));
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera_alt),
-        onPressed: () async {
-          try {
-            await _initializeControllerFuture;
+        backgroundColor: Colors.black,
+        body: FutureBuilder(
+          future: _initializeControllerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Transform.scale(
+                  scale: 1 / _controller.value.aspectRatio,
+                  child: new Center(
+                    child: new AspectRatio(
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: new CameraPreview(_controller)),
+                  ));
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.camera_alt),
+          onPressed: () async {
+            try {
+              await _initializeControllerFuture;
 
-            final path = join(
-              (await getTemporaryDirectory()).path,
-              '${DateTime.now()}.png',
-            );
+              final path = join(
+                (await getTemporaryDirectory()).path,
+                '${DateTime.now()}.png',
+              );
 
-            await _controller.takePicture(path);
+              await _controller.takePicture(path);
 
-            Navigator.pop(context, path);
-          } catch (e) {
-            print(e);
-          }
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
-    );
+              Navigator.pop(context, path);
+            } catch (e) {
+              print(e);
+            }
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
   }
 }
