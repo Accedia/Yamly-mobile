@@ -47,7 +47,7 @@ class ProfilePage extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(22.0)),
               elevation: 7,
-              color: Style.PrimaryColor,
+              color: Theme.of(context).primaryColor,
               clipBehavior: Clip.antiAlias,
               child: MaterialButton(
                 padding: EdgeInsets.symmetric(vertical: 15),

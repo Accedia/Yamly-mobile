@@ -90,6 +90,9 @@ flutter:
   assets:
     - images/logo.png
     - images/hot-dog.jpg
+    - images/ic_pot.png
+    - images/ic_refresh.png
+    - images/ic_star.png
   
   fonts:
     - family: GothamRounded
@@ -99,3 +102,6 @@ flutter:
           style: italic
         - asset: fonts/GothamRounded-Bold.otf
           weight: 700
+    - family: LemonJelly
+      fonts:
+        - asset: fonts/LemonJelly.ttf
