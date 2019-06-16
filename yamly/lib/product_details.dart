@@ -36,13 +36,12 @@ class ProductInfoPage extends StatelessWidget {
                         child: Material(
                           color: Colors.black87,
                           child: ListTile(
-                              title: Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text("Name", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)
-                              )),
-                              trailing: IconButton(color: Colors.white, icon: Icon(Icons.arrow_drop_down), onPressed: (){
-                                  Navigator.pop(context);
-                              }),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 25),
+                              title: Text("Name", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                              trailing: Icon(Icons.arrow_drop_down, color: Colors.white),
+                              onTap: (){
+                                Navigator.pop(context);
+                              },
                       ))),
                       Container(
                         width: double.infinity,

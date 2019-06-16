@@ -22,7 +22,7 @@ class _ProductsPageState extends State<ProductsPage>
   void initState() {
     super.initState();
     _foods = List<FoodModel>();
-    for (int x = 0; x < 30; x++) {
+    for (int x = 0; x < 10; x++) {
       _foods.add(FoodModel());
     }
     _cards = _getCards();
@@ -33,7 +33,7 @@ class _ProductsPageState extends State<ProductsPage>
     return Scaffold(
         body: Center(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(25),
         child: Stack(alignment: Alignment.center, children: _cards),
       ),
     ));
@@ -86,7 +86,6 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
   void initState() {
     super.initState();
     _controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    //initAnimation();
   }
 
   void initAnimation(bool isLeft) {
@@ -153,47 +152,53 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: IconButton(
-                            icon: Icon(
-                              Icons.arrow_left,
-                              color: Colors.white,
-                            ),
-                            iconSize: 50,
-                            onPressed: () {
-                              setState(() {
-                                initAnimation(true);
-                                _controller.forward();
-                              });
-                            }),
+                        child: VoteButton(
+                          icon: Icon(
+                            Icons.thumb_down,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              initAnimation(true);
+                              _controller.forward();
+                            });
+                        })
                       ),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: IconButton(
-                            icon: Icon(Icons.arrow_right, 
+                        child: VoteButton(
+                          icon: Icon(Icons.thumb_up, 
                             color: Colors.white),
-                            iconSize: 50,
-                            onPressed: () {
-                              setState(() {
-                                initAnimation(false);
-                                _controller.forward();
-                              });
-                            }),
+                          onPressed: (){
+                            setState(() {
+                              initAnimation(false);
+                              _controller.forward();
+                            });
+                          }
+                        )
                       ),
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Hero(
                           tag: "Text" + "Food" + widget.x.toString(),
                           child: Material(
-                            color: Colors.black26,
-                            child: ListTile(
-                              title: Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child:Text("Name", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
-                                ),
-                              trailing: IconButton(color: Colors.white, icon: Icon(Icons.arrow_drop_up), onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => 
-                                  ProductInfoPage(tag: "Food" + widget.x.toString())));
-                            })),
+                            color: Colors.transparent,
+                            child: Container(
+                              decoration: new BoxDecoration(
+                                  color: Colors.black26,
+                                  borderRadius: new BorderRadius.only(
+                                      topLeft: const Radius.circular(10.0),
+                                      topRight: const Radius.circular(10.0))),
+                              child: ListTile(
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => 
+                                    ProductInfoPage(tag: "Food" + widget.x.toString())));
+                                },
+                                title: Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child:Text("Name", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
+                                  ),
+                                trailing: Icon(Icons.arrow_drop_up, color: Colors.white))),
                           )
                       ))
                     ]),
@@ -206,6 +211,33 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
   }
 }
 
+class VoteButton extends StatelessWidget {
+  const VoteButton({
+    Key key, 
+    this.onPressed, this.icon,
+  }) : super(key: key);
+  final VoidCallback onPressed;
+  final Icon icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5),
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          decoration: new BoxDecoration(
+              color: Colors.black26,
+              borderRadius: new BorderRadius.all(const Radius.circular(40.0))),
+          child: IconButton(
+            padding: EdgeInsets.all(20),
+            icon: icon,
+            onPressed: onPressed
+          ))),
+    );
+  }
+}
+
 class MoveTransition extends StatelessWidget {
   MoveTransition({this.child, this.animation});
 
@@ -213,12 +245,10 @@ class MoveTransition extends StatelessWidget {
   final Animation<double> animation;
 
   Widget build(BuildContext context) => 
-      Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Transform.translate(
-            offset: Offset(
-              - (animation != null ? animation.value : 0.0), 
-              - (animation != null ? animation.value.abs() / 6 : 0.0)),
-            child: child
-      ));
+      Transform.translate(
+        offset: Offset(
+          - (animation != null ? animation.value : 0.0), 
+          - (animation != null ? animation.value.abs() / 6 : 0.0)),
+        child: child
+      );
 }

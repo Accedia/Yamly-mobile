@@ -27,7 +27,7 @@ class LoginPageState extends State<LoginPage> {
     });
 
     if (!_isLogin) {
-      Timer(Duration(seconds: 2), advance);
+      Timer(Duration(milliseconds: 1500), advance);
     }
   }
 
@@ -41,29 +41,25 @@ class LoginPageState extends State<LoginPage> {
       children: <Widget>[
         Image(image: AssetImage('images/logo.png')),
         SizedBox(height: 30),
-        progressIndicator(),
-        materialButton()
+        _isLogin ? materialButton() : progressIndicator()
       ],
     )));
   }
 
   Widget progressIndicator() {
-    return Visibility(
-      child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Style.PrimaryColor)),
-      visible: !_isLogin,
-    );
+    return CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation<Color>(Style.PrimaryColor));
   }
 
   Widget materialButton() {
-    return Visibility(
-        child: Material(
+    return Material(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0)),
           elevation: 7,
           color: Style.PrimaryColor,
           clipBehavior: Clip.antiAlias,
           child: MaterialButton(
+            padding: EdgeInsets.symmetric(vertical: 15),
             minWidth: 200,
             textColor: Colors.white,
             child: Text("Login with Google"),
@@ -74,8 +70,7 @@ class LoginPageState extends State<LoginPage> {
               });
             },
           ),
-        ),
-        visible: _isLogin);
+        );
   }
 
   advance() {

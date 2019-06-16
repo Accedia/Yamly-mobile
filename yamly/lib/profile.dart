@@ -50,6 +50,7 @@ class ProfilePage extends StatelessWidget {
               color: Style.PrimaryColor,
               clipBehavior: Clip.antiAlias,
               child: MaterialButton(
+                padding: EdgeInsets.symmetric(vertical: 15),
                 minWidth: 200,
                 textColor: Colors.white,
                 child: Text("Log Out"),
