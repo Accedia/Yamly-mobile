@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:yamly/models/foodModel.dart';
 import 'dart:core';
 
+import 'package:yamly/product_details.dart';
+
 class ProductsPage extends StatefulWidget {
   ProductsPage({Key key}) : super(key: key);
 
@@ -119,43 +121,87 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
             onDismissed: (direction) {
               widget.callback(widget.x);
             },
-            child: Card(
-              elevation: 7,
-              color: widget.color,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Container(
+              decoration: new BoxDecoration(boxShadow: [
+                new BoxShadow(
+                  offset: Offset(0, 10),
+                  color: Colors.black26,
+                  blurRadius: 10.0,
+                ),
+              ]),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Stack(
                     children: <Widget>[
-                      IconButton(
-                          icon: Icon(
-                            Icons.arrow_left,
-                            color: Colors.white,
+                      Hero(
+                        tag: "Food" + widget.x.toString(),
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          // child: Image.network(
+                          //   'https://picsum.photos/250?image=9',
+                          // ),
+                          decoration: BoxDecoration(
+                            color: widget.color,
+                            borderRadius: BorderRadius.circular(10)
                           ),
-                          iconSize: 50,
-                          onPressed: () {
-                            setState(() {
-                              initAnimation(true);
-                              _controller.forward();
-                            });
-                          }),
-                      IconButton(
-                          icon: Icon(Icons.arrow_right, color: Colors.white),
-                          iconSize: 50,
-                          onPressed: () {
-                            setState(() {
-                              initAnimation(false);
-                              _controller.forward();
-                            });
-                          })
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.arrow_left,
+                              color: Colors.white,
+                            ),
+                            iconSize: 50,
+                            onPressed: () {
+                              setState(() {
+                                initAnimation(true);
+                                _controller.forward();
+                              });
+                            }),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                            icon: Icon(Icons.arrow_right, 
+                            color: Colors.white),
+                            iconSize: 50,
+                            onPressed: () {
+                              setState(() {
+                                initAnimation(false);
+                                _controller.forward();
+                              });
+                            }),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Hero(
+                          tag: "Text" + "Food" + widget.x.toString(),
+                          child: Material(
+                            color: Colors.black26,
+                            child: ListTile(
+                              title: Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child:Text("Name", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
+                                ),
+                              trailing: IconButton(color: Colors.white, icon: Icon(Icons.arrow_drop_up), onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => 
+                                  ProductInfoPage(tag: "Food" + widget.x.toString())));
+                            })),
+                          )
+                      ))
                     ]),
-              ),
+                  ),
+                ),
+              )
             )
           ),
-        )
     );
   }
 }
@@ -168,11 +214,11 @@ class MoveTransition extends StatelessWidget {
 
   Widget build(BuildContext context) => 
       Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Transform.translate(
-          offset: Offset(
-            - (animation != null ? animation.value : 0.0), 
-            - (animation != null ? animation.value.abs() / 6 : 0.0)),
-          child: child
+          padding: EdgeInsets.all(20.0),
+          child: Transform.translate(
+            offset: Offset(
+              - (animation != null ? animation.value : 0.0), 
+              - (animation != null ? animation.value.abs() / 6 : 0.0)),
+            child: child
       ));
 }
