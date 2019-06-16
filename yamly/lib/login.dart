@@ -27,7 +27,6 @@ class LoginPage extends StatelessWidget {
             child: Text("Login with Google"),
             onPressed: () {
               authService.googleSignIn().then((user) {
-                authService.updateUserData(user);
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => HomePage()));
               });

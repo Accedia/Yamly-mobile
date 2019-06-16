@@ -36,7 +36,11 @@ class AuthService {
     );
 
     loading.add(false);
-    return await _auth.signInWithCredential(credential);
+
+    final user = await _auth.signInWithCredential(credential);
+    updateUserData(user);
+
+    return user;
   }
 
   void updateUserData(FirebaseUser user) async {
@@ -55,6 +59,16 @@ class AuthService {
 
   Future signOut() async {
     _auth.signOut();
+  }
+
+  Future<bool> checkIfLogged() async {
+    final currentUser = await FirebaseAuth.instance.currentUser();
+
+    if (data.user == null) {
+      data.user = currentUser;
+    }
+
+    return currentUser != null;
   }
 }
 
