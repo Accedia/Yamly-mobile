@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
+import 'data.dart';
 
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -35,10 +36,16 @@ class AuthService {
     );
 
     loading.add(false);
-    return await _auth.signInWithCredential(credential);
+
+    final user = await _auth.signInWithCredential(credential);
+    updateUserData(user);
+
+    return user;
   }
 
   void updateUserData(FirebaseUser user) async {
+    data.user = user;
+
     final DocumentReference ref = _db.collection('users').document(user.uid);
 
     return ref.setData({
@@ -50,8 +57,18 @@ class AuthService {
     }, merge: true);
   }
 
-  void signOut() {
+  Future signOut() async {
     _auth.signOut();
+  }
+
+  Future<bool> checkIfLogged() async {
+    final currentUser = await FirebaseAuth.instance.currentUser();
+
+    if (data.user == null) {
+      data.user = currentUser;
+    }
+
+    return currentUser != null;
   }
 }
 

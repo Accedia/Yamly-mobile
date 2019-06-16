@@ -1,4 +1,4 @@
-package accedia.com.yamly
+package com.accedia.yamly
 
 import android.os.Bundle
 
