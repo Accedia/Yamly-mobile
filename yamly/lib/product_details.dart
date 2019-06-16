@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_image/network.dart';
+import 'package:yamly/models/product_model.dart';
 
 class ProductInfoPage extends StatelessWidget {
   final String tag;
+  final ProductModel product;
 
-  const ProductInfoPage({Key key, this.tag}) : super(key: key);
+  const ProductInfoPage({Key key, this.tag, this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +19,14 @@ class ProductInfoPage extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.green
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      alignment: FractionalOffset.topCenter,
+                      image: NetworkImageWithRetry(product.imageUrl),
+                    )
                   ),
-                  // child: Image.network(
-                  //   'https://picsum.photos/250?image=9',
+                  // child: Image(
+                  //   image: NetworkImageWithRetry(product.imageUrl),
                   // )
                 ),
               ),
@@ -37,7 +44,7 @@ class ProductInfoPage extends StatelessWidget {
                           color: Colors.black87,
                           child: ListTile(
                               contentPadding: EdgeInsets.symmetric(horizontal: 25),
-                              title: Text("Name", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                              title: Text(product.name, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
                               trailing: Icon(Icons.arrow_drop_down, color: Colors.white),
                               onTap: (){
                                 Navigator.pop(context);
@@ -46,7 +53,7 @@ class ProductInfoPage extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-                        child: Text("More info about this foodMore info about this food\nMore info about this food\nMore info about this food",
+                        child: Text(product.description,
                           style: TextStyle(color: Colors.white)),
                       ),
                   ],

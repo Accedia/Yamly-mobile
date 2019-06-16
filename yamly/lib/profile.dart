@@ -1,11 +1,11 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:yamly/auth.dart';
+import 'package:yamly/services/auth.dart';
 import 'package:yamly/camera.dart';
-import 'package:yamly/colors.dart';
+import 'package:yamly/values/colors.dart';
 import 'package:yamly/login.dart';
-import 'data.dart';
+import 'package:yamly/models/data.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'ml.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yamly/colors.dart';
+import 'package:yamly/values/colors.dart';
 import 'package:yamly/login.dart';
 
 void main() => runApp(MyApp());

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:yamly/colors.dart';
+import 'package:yamly/services/api_service.dart';
+import 'package:yamly/values/colors.dart';
 import 'package:yamly/products.dart';
 import 'package:yamly/profile.dart';
 import 'package:yamly/recipe.dart';
@@ -30,6 +31,8 @@ class HomePageState extends State<HomePage>
         onPageChange(_tabController.index, p: _pageController);
       }
     });
+
+    //APIService().addProduct();
   }
 
   initTabData() {

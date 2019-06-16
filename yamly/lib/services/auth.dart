@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
-import 'data.dart';
+import 'package:yamly/models/data.dart';
 
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
