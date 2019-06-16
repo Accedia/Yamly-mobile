@@ -48,29 +48,29 @@ class LoginPageState extends State<LoginPage> {
 
   Widget progressIndicator() {
     return CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation<Color>(Style.PrimaryColor));
+        valueColor:
+            AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor));
   }
 
   Widget materialButton() {
     return Material(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0)),
-          elevation: 7,
-          color: Style.PrimaryColor,
-          clipBehavior: Clip.antiAlias,
-          child: MaterialButton(
-            padding: EdgeInsets.symmetric(vertical: 15),
-            minWidth: 200,
-            textColor: Colors.white,
-            child: Text("Login with Google"),
-            onPressed: () {
-              authService.googleSignIn().then((user) {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => HomePage()));
-              });
-            },
-          ),
-        );
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0)),
+      elevation: 7,
+      color: Style.PrimaryColor,
+      clipBehavior: Clip.antiAlias,
+      child: MaterialButton(
+        padding: EdgeInsets.symmetric(vertical: 15),
+        minWidth: 200,
+        textColor: Colors.white,
+        child: Text("Sign In"),
+        onPressed: () {
+          authService.googleSignIn().then((user) {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => HomePage()));
+          });
+        },
+      ),
+    );
   }
 
   advance() {

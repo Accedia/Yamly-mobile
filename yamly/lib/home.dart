@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:yamly/colors.dart';
 import 'package:yamly/products.dart';
 import 'package:yamly/profile.dart';
+import 'package:yamly/recipe.dart';
 
 class HomePage extends StatefulWidget {
   @override
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
   var _pageController = PageController(initialPage: 1);
   List<NavTab> tabList;
@@ -21,7 +23,8 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
 
     initTabData();
 
-    _tabController = TabController(length: tabList.length, vsync: this, initialIndex: 1);
+    _tabController =
+        TabController(length: tabList.length, vsync: this, initialIndex: 1);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
         onPageChange(_tabController.index, p: _pageController);
@@ -33,7 +36,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
     tabList = [
       NavTab(1, Icon(Icons.person), ProfilePage()),
       NavTab(2, Icon(Icons.view_carousel), ProductsPage()),
-      NavTab(3, Icon(Icons.fastfood), ProductsPage())
+      NavTab(3, Icon(Icons.fastfood), RecipeScreen())
     ];
   }
 
@@ -51,37 +54,41 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: PageView.builder(
-              itemCount: tabList.length,
-              onPageChanged: (index) {
-                if (canChangePage) {
-                  onPageChange(index);
-                }
-              },
-              controller: _pageController,
-              itemBuilder: (BuildContext context, int index) {
-                return tabList[index].widget;
-              })),
-      bottomNavigationBar: Container(
-        color: Colors.black87,
-        child: SafeArea(
-          child: Container(
-            child: TabBar(
-                controller: _tabController,
-                indicatorColor: Colors.black,
-                labelColor: Style.PrimaryColor,
-                unselectedLabelColor: Colors.grey,
-                indicatorWeight: 1,
-                indicator: UnderlineTabIndicator(
-                    borderSide: BorderSide(color: Colors.black, width: 1.0),
-                    insets: EdgeInsets.fromLTRB(70.0, 0.0, 70.0, 46)),
-                tabs: tabList.map((item) {
-                  return Tab(icon: item.icon);
-                }).toList()))
-        ),
-      )
-    );
+        body: SafeArea(
+            child: PageView.builder(
+                itemCount: tabList.length,
+                onPageChanged: (index) {
+                  if (canChangePage) {
+                    onPageChange(index);
+                  }
+                },
+                controller: _pageController,
+                itemBuilder: (BuildContext context, int index) {
+                  return tabList[index].widget;
+                })),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+              color: Colors.transparent,
+              border: new Border(
+                  top: BorderSide(
+                      color: Theme.of(context).unselectedWidgetColor,
+                      width: 0.5))),
+          child: SafeArea(
+              child: Container(
+                  height: 60,
+                  child: TabBar(
+                      controller: _tabController,
+                      indicatorColor: Colors.black,
+                      labelColor: Theme.of(context).primaryColor,
+                      unselectedLabelColor: Colors.grey,
+                      indicatorWeight: 1,
+                      indicator: UnderlineTabIndicator(
+                          borderSide: BorderSide(width: 0),
+                          insets: EdgeInsets.all(0)),
+                      tabs: tabList.map((item) {
+                        return Tab(icon: item.icon);
+                      }).toList()))),
+        ));
   }
 }
 
