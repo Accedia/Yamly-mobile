@@ -1,9 +1,15 @@
+import 'dart:async';
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:yamly/models/foodModel.dart';
+import 'package:yamly/models/data.dart';
+import 'package:yamly/models/product_model.dart';
 import 'dart:core';
 
 import 'package:yamly/product_details.dart';
+import 'package:yamly/services/api_service.dart';
+import 'package:yamly/values/widgets.dart';
+import 'package:flutter_image/network.dart';
 
 class ProductsPage extends StatefulWidget {
   ProductsPage({Key key}) : super(key: key);
@@ -14,50 +20,64 @@ class ProductsPage extends StatefulWidget {
 
 class _ProductsPageState extends State<ProductsPage>
     with SingleTickerProviderStateMixin {
-  List<FoodModel> _foods;
   List<Widget> _cards;
   double myOpacity = 0.9;
+  final loadedItems = 15;
 
   @override
   void initState() {
     super.initState();
-    _foods = List<FoodModel>();
-    for (int x = 0; x < 10; x++) {
-      _foods.add(FoodModel());
-    }
-    _cards = _getCards();
+    _reloadCards();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await APIService().addProduct();
+      if (mounted){
+        setState(() {
+          _reloadCards();
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-      child: Padding(
-        padding: const EdgeInsets.all(25),
-        child: Stack(alignment: Alignment.center, children: _cards),
-      ),
+    return Container(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(25),
+            child: 
+              _cards.length > 0 ?
+                Stack(alignment: Alignment.center, children: _cards) :
+                CustomWidgets.progressIndicator(),
+          ),
     ));
   }
 
-  List<Widget> _getCards() {
-    var cards = List<Widget>();
+  void _reloadCards() {
+    _cards = List<Widget>();
 
-    for (int x = 0; x < _foods.length; x++) {
-      cards.add(
-        AnimatedItemCart(x: x, callback: _removeCard,
-          color: Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0)
-                  .withOpacity(1.0))
+    for (int x = 0; x < min(data.products.length, loadedItems); x++) {
+      _cards.add(
+        AnimatedItemCart(product: data.products[x], x: x, callback: _removeCard)
       );
     }
-
-    return cards;
+    setState(() {});
   }
 
   void _removeCard(int index) {
     setState(() {
-      _foods.removeAt(index);
+      data.products.removeAt(index);
       _cards.removeAt(index);
+      if (_cards.length < 1)
+      {
+        _cards = new List<Widget>();
+        Timer(Duration(milliseconds: 200), () {_reloadCards();});
+      }
     });
+    if (data.products.length < loadedItems)
+    {
+      APIService().addProduct();
+    }
   }
 }
 
@@ -66,12 +86,13 @@ typedef void IndexCallback(int index);
 class AnimatedItemCart extends StatefulWidget{
   AnimatedItemCart({
     Key key,
-    @required this.x, this.callback, this.color,
+    @required this.x, @required this.product, this.callback, this.color,
   }) : super(key: key);
 
   final int x;
   final IndexCallback callback;
   final Color color;
+  final ProductModel product;
 
   @override
   _AnimatedItemCartState createState() => _AnimatedItemCartState();
@@ -136,18 +157,17 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
                   height: double.infinity,
                   child: Stack(
                     children: <Widget>[
+                      Center(
+                        child: Image.asset('images/logo.png')
+                      ),
                       Hero(
                         tag: "Food" + widget.x.toString(),
                         child: Container(
                           width: double.infinity,
                           height: double.infinity,
-                          // child: Image.network(
-                          //   'https://picsum.photos/250?image=9',
-                          // ),
-                          decoration: BoxDecoration(
-                            color: widget.color,
-                            borderRadius: BorderRadius.circular(10)
-                          ),
+                          child: Image(
+                            image: NetworkImageWithRetry(widget.product.imageUrl),
+                          )
                         ),
                       ),
                       Align(
@@ -155,7 +175,7 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
                         child: VoteButton(
                           icon: Icon(
                             Icons.thumb_down,
-                            color: Colors.white,
+                            color: Colors.redAccent,
                           ),
                           onPressed: () {
                             setState(() {
@@ -168,7 +188,7 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
                         alignment: Alignment.centerRight,
                         child: VoteButton(
                           icon: Icon(Icons.thumb_up, 
-                            color: Colors.white),
+                            color: Colors.greenAccent),
                           onPressed: (){
                             setState(() {
                               initAnimation(false);
@@ -185,18 +205,18 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
                             color: Colors.transparent,
                             child: Container(
                               decoration: new BoxDecoration(
-                                  color: Colors.black26,
+                                  color: Colors.black38,
                                   borderRadius: new BorderRadius.only(
                                       topLeft: const Radius.circular(10.0),
                                       topRight: const Radius.circular(10.0))),
                               child: ListTile(
                                 onTap: (){
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => 
-                                    ProductInfoPage(tag: "Food" + widget.x.toString())));
+                                    ProductInfoPage(tag: "Food" + widget.x.toString(), product: widget.product)));
                                 },
                                 title: Padding(
                                     padding: EdgeInsets.only(left: 10),
-                                    child:Text("Name", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
+                                    child:Text(widget.product.name, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
                                   ),
                                 trailing: Icon(Icons.arrow_drop_up, color: Colors.white))),
                           )
@@ -223,17 +243,18 @@ class VoteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5),
-      child: Material(
-        color: Colors.transparent,
-        child: Container(
-          decoration: new BoxDecoration(
-              color: Colors.black26,
-              borderRadius: new BorderRadius.all(const Radius.circular(40.0))),
-          child: IconButton(
-            padding: EdgeInsets.all(20),
-            icon: icon,
-            onPressed: onPressed
-          ))),
+      child: ClipOval(
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            color: Colors.black38,
+            child: IconButton(
+              padding: EdgeInsets.all(20),
+              icon: icon,
+              onPressed: onPressed
+            ),
+          )
+        )),
     );
   }
 }

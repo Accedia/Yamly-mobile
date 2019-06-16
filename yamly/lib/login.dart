@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:yamly/auth.dart';
-import 'package:yamly/colors.dart';
+import 'package:yamly/services/auth.dart';
+import 'package:yamly/values/colors.dart';
 import 'package:yamly/home.dart';
+import 'package:yamly/values/widgets.dart';
 
 class LoginPage extends StatefulWidget {
   final bool isLogin;
@@ -41,36 +42,31 @@ class LoginPageState extends State<LoginPage> {
       children: <Widget>[
         Image(image: AssetImage('images/logo.png')),
         SizedBox(height: 30),
-        _isLogin ? materialButton() : progressIndicator()
+        _isLogin ? materialButton() : CustomWidgets.progressIndicator()
       ],
     )));
   }
 
-  Widget progressIndicator() {
-    return CircularProgressIndicator(
-        valueColor:
-            AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor));
-  }
-
   Widget materialButton() {
     return Material(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0)),
-      elevation: 7,
-      color: Style.PrimaryColor,
-      clipBehavior: Clip.antiAlias,
-      child: MaterialButton(
-        padding: EdgeInsets.symmetric(vertical: 15),
-        minWidth: 200,
-        textColor: Colors.white,
-        child: Text("Sign In"),
-        onPressed: () {
-          authService.googleSignIn().then((user) {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomePage()));
-          });
-        },
-      ),
-    );
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0)),
+        elevation: 7,
+        color: Style.PrimaryColor,
+        clipBehavior: Clip.antiAlias,
+        child: MaterialButton(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          minWidth: 200,
+          textColor: Colors.white,
+          child: Text("Login with Google"),
+          onPressed: () {
+            authService.googleSignIn().then((user) {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => HomePage()));
+            });
+          },
+        ),
+      );
   }
 
   advance() {
