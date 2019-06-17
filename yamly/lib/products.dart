@@ -123,20 +123,24 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
       });
   }
 
-  void likeAction() {
+  void likeAction(bool hasAnimation) {
     authService.addProductLike(widget.product.id);
-    setState(() {
-      initAnimation(false);
-      _controller.forward();
-    });
+    if (hasAnimation){
+      setState(() {
+        initAnimation(false);
+        _controller.forward();
+      });
+    }
   }
 
-  void dislikeAction() {
+  void dislikeAction(bool hasAnimation) {
     authService.addProductDislike(widget.product.id);
-    setState(() {
-      initAnimation(true);
-      _controller.forward();
-    });
+    if (hasAnimation){
+      setState(() {
+        initAnimation(true);
+        _controller.forward();
+      });
+    }
   }
 
   @override
@@ -157,6 +161,13 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
             onResize: () {},
             onDismissed: (direction) {
               widget.callback(widget.x);
+              if (direction == DismissDirection.endToStart)
+              {
+                dislikeAction(false);
+              }
+              else{
+                likeAction(false);
+              }
             },
             child: Container(
               decoration: new BoxDecoration(boxShadow: [
@@ -201,7 +212,7 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
                             color: Colors.redAccent,
                           ),
                           onPressed: () {
-                            dislikeAction();
+                            dislikeAction(true);
                         })
                       ),
                       Align(
@@ -211,7 +222,7 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
                           icon: Icon(Icons.thumb_up, 
                             color: Colors.greenAccent),
                           onPressed: (){
-                            likeAction();
+                            likeAction(true);
                           }
                         )
                       ),
