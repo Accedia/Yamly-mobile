@@ -24,6 +24,7 @@ dependencies:
   path_provider: ^1.1.0
   path: ^1.6.2
   permission_handler: ^3.1.0
+  url_launcher: ^5.0.3
 
   firebase_core: ^0.4.0+5
   firebase_analytics: ^3.0.2
@@ -91,10 +92,6 @@ flutter:
 
   assets:
     - images/logo.png
-    - images/hot-dog.jpg
-    - images/ic_pot.png
-    - images/ic_refresh.png
-    - images/ic_star.png
   
   fonts:
     - family: GothamRounded
@@ -104,6 +101,6 @@ flutter:
           style: italic
         - asset: fonts/GothamRounded-Bold.otf
           weight: 700
-    - family: LemonJelly
+    - family: NoTime
       fonts:
-        - asset: fonts/LemonJelly.ttf
+        - asset: fonts/NoTime.ttf
