@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:yamly/values/urls.dart';
 
 class APIService{
+  static const int productsFetchNumber = 20;
   dynamic _extractData(http.Response resp) => json.decode(resp.body);
 
   Exception _handleError(dynamic e) {
@@ -13,9 +14,12 @@ class APIService{
   }
 
   Future<void> addProduct() async{
-    var newProducts = await fetchProducts();
-    if (newProducts != null){
-      data.products.addAll(newProducts);
+    if (data.products.length < 2 * productsFetchNumber)
+    {
+      var newProducts = await fetchProducts();
+      if (newProducts != null){
+        data.products.addAll(newProducts);
+      }
     }
   }
 

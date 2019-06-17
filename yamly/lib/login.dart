@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:yamly/services/auth.dart';
 import 'package:yamly/values/colors.dart';
 import 'package:yamly/home.dart';
@@ -30,6 +31,14 @@ class LoginPageState extends State<LoginPage> {
     if (!_isLogin) {
       Timer(Duration(milliseconds: 1500), advance);
     }
+    var shared = authService.loading.stream;
+    shared.listen(updateLoading);
+  }
+
+  void updateLoading(bool isLoading) {
+    setState(() {
+      _isLogin = !isLoading;
+    });
   }
 
   @override
@@ -61,8 +70,10 @@ class LoginPageState extends State<LoginPage> {
           child: Text("Sign In"),
           onPressed: () {
             authService.googleSignIn().then((user) {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => HomePage()));
+              if (user != null){
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => HomePage()));
+              }
             });
           },
         ),
