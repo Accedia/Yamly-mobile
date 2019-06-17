@@ -104,6 +104,6 @@ flutter:
           style: italic
         - asset: fonts/GothamRounded-Bold.otf
           weight: 700
-    - family: LemonJelly
+    - family: NoTime
       fonts:
-        - asset: fonts/LemonJelly.ttf
+        - asset: fonts/NoTime.ttf
