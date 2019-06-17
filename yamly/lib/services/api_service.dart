@@ -52,13 +52,11 @@ class APIService {
   }
 
   addHotDog() {
-    data.products.insert(
-        10,
-        ProductModel(
-            id: 0,
-            name: 'hot dog',
-            description: '',
-            imageUrl:
-                'https://veggiedesserts.co.uk/wp-content/uploads/2018/04/Lentil-Carrot-Hot-Dogs-4B.jpg'));
+    data.products.add(ProductModel(
+        id: -1,
+        name: 'hot dog',
+        description: '',
+        imageUrl:
+            'https://veggiedesserts.co.uk/wp-content/uploads/2018/04/Lentil-Carrot-Hot-Dogs-4B.jpg'));
   }
 }
