@@ -11,7 +11,7 @@ class AuthService {
 
   Observable<FirebaseUser> user;
   Observable<Map<String, dynamic>> profile;
-  PublishSubject loading = PublishSubject();
+  PublishSubject<bool> loading = PublishSubject<bool>();
 
   AuthService() {
     user = Observable(_auth.onAuthStateChanged);
@@ -28,19 +28,25 @@ class AuthService {
   Future<FirebaseUser> googleSignIn() async {
     loading.add(true);
 
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken
-    );
+    try{
+      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken
+      );
+
+      final user = await _auth.signInWithCredential(credential);
+      updateUserData(user);
+
+      return user;
+    }
+    catch(e){
+      loading.add(false);
+    }
 
     loading.add(false);
-
-    final user = await _auth.signInWithCredential(credential);
-    updateUserData(user);
-
-    return user;
+    return null;
   }
 
   void updateUserData(FirebaseUser user) async {
@@ -55,6 +61,34 @@ class AuthService {
       'displayName': user.displayName, 
       'lastSeen': DateTime.now()
     }, merge: true);
+  }
+
+  void addProductLike(int productId)
+  {
+    _addToArray(productId, 'likedProducts');
+  }
+
+  void addProductDislike(int productId)
+  {
+    _addToArray(productId, 'dislikedProducts');
+  }
+
+  void _addToArray(int itemId, String arrayName)
+  {
+    final DocumentReference ref = _db.collection('users').document(data.user.uid);
+
+    _db.runTransaction((Transaction tx) async {
+        DocumentSnapshot snapshot =
+            await tx.get(ref);
+        var doc = snapshot.data;
+        if (doc[arrayName] == null || 
+          !doc[arrayName].contains(itemId)) 
+        {
+          await tx.update(snapshot.reference, <String, dynamic>{
+            arrayName: FieldValue.arrayUnion([itemId])
+          });
+        }
+    });
   }
 
   Future signOut() async {

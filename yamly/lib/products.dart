@@ -8,6 +8,7 @@ import 'dart:core';
 
 import 'package:yamly/product_details.dart';
 import 'package:yamly/services/api_service.dart';
+import 'package:yamly/services/auth.dart';
 import 'package:yamly/values/widgets.dart';
 import 'package:flutter_image/network.dart';
 
@@ -122,6 +123,22 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
       });
   }
 
+  void likeAction() {
+    authService.addProductLike(widget.product.id);
+    setState(() {
+      initAnimation(false);
+      _controller.forward();
+    });
+  }
+
+  void dislikeAction() {
+    authService.addProductDislike(widget.product.id);
+    setState(() {
+      initAnimation(true);
+      _controller.forward();
+    });
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -144,9 +161,9 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
             child: Container(
               decoration: new BoxDecoration(boxShadow: [
                 new BoxShadow(
-                  offset: Offset(0, 10),
-                  color: Colors.black26,
-                  blurRadius: 10.0,
+                  offset: Offset(0, 5),
+                  color: Colors.black12,
+                  blurRadius: 5.0,
                 ),
               ]),
               child: Card(
@@ -165,35 +182,36 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
                         child: Container(
                           width: double.infinity,
                           height: double.infinity,
-                          child: Image(
-                            image: NetworkImageWithRetry(widget.product.imageUrl),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                alignment: FractionalOffset.topCenter,
+                                image: NetworkImageWithRetry(widget.product.imageUrl),
+                              )
                           )
                         ),
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: VoteButton(
+                          color: Colors.black45,
                           icon: Icon(
                             Icons.thumb_down,
                             color: Colors.redAccent,
                           ),
                           onPressed: () {
-                            setState(() {
-                              initAnimation(true);
-                              _controller.forward();
-                            });
+                            dislikeAction();
                         })
                       ),
                       Align(
                         alignment: Alignment.centerRight,
                         child: VoteButton(
+                          color: Colors.black45,
                           icon: Icon(Icons.thumb_up, 
                             color: Colors.greenAccent),
                           onPressed: (){
-                            setState(() {
-                              initAnimation(false);
-                              _controller.forward();
-                            });
+                            likeAction();
                           }
                         )
                       ),
@@ -205,10 +223,8 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
                             color: Colors.transparent,
                             child: Container(
                               decoration: new BoxDecoration(
-                                  color: Colors.black38,
-                                  borderRadius: new BorderRadius.only(
-                                      topLeft: const Radius.circular(10.0),
-                                      topRight: const Radius.circular(10.0))),
+                                  color: Theme.of(context).primaryColor.withOpacity(0.7),
+                                  borderRadius: new BorderRadius.all(const Radius.circular(10.0))),
                               child: ListTile(
                                 onTap: (){
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => 
@@ -218,7 +234,7 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
                                     padding: EdgeInsets.only(left: 10),
                                     child:Text(widget.product.name, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
                                   ),
-                                trailing: Icon(Icons.arrow_drop_up, color: Colors.white))),
+                                trailing: Icon(Icons.keyboard_arrow_up, size: 30, color: Colors.white))),
                           )
                       ))
                     ]),
@@ -234,10 +250,11 @@ class _AnimatedItemCartState extends State<AnimatedItemCart>
 class VoteButton extends StatelessWidget {
   const VoteButton({
     Key key, 
-    this.onPressed, this.icon,
+    this.onPressed, this.icon, this.color
   }) : super(key: key);
   final VoidCallback onPressed;
   final Icon icon;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +264,7 @@ class VoteButton extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: Container(
-            color: Colors.black38,
+            color: color,
             child: IconButton(
               padding: EdgeInsets.all(20),
               icon: icon,

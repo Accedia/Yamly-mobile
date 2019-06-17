@@ -134,6 +134,7 @@ class RecipeScreen extends StatelessWidget {
                       clipBehavior: Clip.antiAlias,
                       child: MaterialButton(
                         minWidth: 200,
+                        padding: EdgeInsets.all(15),
                         textColor: Colors.white,
                         child: Text("Cook now!"),
                         onPressed: () {},
