@@ -4,6 +4,7 @@ import 'package:yamly/models/data.dart';
 import 'package:yamly/models/recipe_model.dart';
 import 'package:yamly/services/api_service.dart';
 import 'package:yamly/values/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'models/product_model.dart';
 
@@ -156,7 +157,7 @@ class RecipeScreenState extends State<RecipeScreen> {
                 padding: EdgeInsets.all(15),
                 textColor: Colors.white,
                 child: Text("Let's cook"),
-                onPressed: () {},
+                onPressed: () async => await _launchUrl(recipe.directions),
               ),
             ),
           ],
@@ -199,6 +200,12 @@ class RecipeScreenState extends State<RecipeScreen> {
         _isLoading = false;
         _recipe = data.recipe;
       });
+    }
+  }
+
+  Future _launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
     }
   }
 }
