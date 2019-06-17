@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:yamly/models/data.dart';
 import 'package:yamly/models/product_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:yamly/models/recipe_model.dart';
 import 'package:yamly/values/urls.dart';
 
 class APIService{
@@ -36,5 +37,16 @@ class APIService{
     } catch (e) {
       throw _handleError(e);
     }
+  }
+
+  Future fetchRecipe() async {
+     try {
+       final response = await http.get('${Urls.randomRecipe}/${data.user.uid}');
+       if (response.statusCode == 200) {
+         data.recipe = RecipeModel.fromJson(_extractData(response));
+       }
+     } catch(e) {
+       throw _handleError(e);
+     }
   }
 }
