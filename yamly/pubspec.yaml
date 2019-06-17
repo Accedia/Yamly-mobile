@@ -91,10 +91,6 @@ flutter:
 
   assets:
     - images/logo.png
-    - images/hot-dog.jpg
-    - images/ic_pot.png
-    - images/ic_refresh.png
-    - images/ic_star.png
   
   fonts:
     - family: GothamRounded
