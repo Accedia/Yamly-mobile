@@ -62,8 +62,7 @@ class RecipeScreenState extends State<RecipeScreen> {
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.all(25),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: ListView(
                             children: <Widget>[
                               Container(
                                   child: Center(
